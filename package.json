@@ -6,6 +6,10 @@
     "start": "node ./bin/www",
     "test": "jest --forceExit"
   },
+  "engines": {
+    "node": "8.4.0",
+    "npm": "5.4.2"
+  },
   "dependencies": {
     "bcrypt": "^1.0.3",
     "body-parser": "^1.18.1",
