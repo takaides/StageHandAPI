@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 /* GET home page. */
-router.get('/stager', function(req, res, next) {
+router.get('/', function(req, res, next) {
   // verify credentials
 
   // get db call
@@ -11,7 +11,7 @@ router.get('/stager', function(req, res, next) {
 
 });
 
-router.post('/stager', function(req, res, next) {
+router.post('/', function(req, res, next) {
   // verify credentials
 
   // form db entry
@@ -19,7 +19,7 @@ router.post('/stager', function(req, res, next) {
   // push db entry
 
   // redirect to list
-  
+
 });
 
 module.exports = router;
