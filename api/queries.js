@@ -176,10 +176,10 @@ function resaStatistics(req, res, next) {
         i++;
       })
       avgDOM = Math.floor(totalDOM / i);
-      // console.log("totalDOM: ", totalDOM, " / i: ", i, " = avgDOM: ", avgDOM);
+      console.log("totalDOM: ", totalDOM, " / i: ", i, " = avgDOM: ", avgDOM);
       avgDOMstaged = Math.floor(totalDOMstaged / i);
-      avgDOMBeforeStaged = avgDOM - avgDOMstaged;
-      // console.log("totalDOMStaged: ", totalDOMstaged, " / i: ", i, " = avgDOMStaged: ", avgDOMstaged);
+      avgDOMBeforeStaged = (avgDOM - avgDOMstaged);
+      console.log("totalDOMStaged: ", totalDOMstaged, " / i: ", i, " = avgDOMStaged: ", avgDOMstaged);
       avgAboveListPrice = Math.floor(totalAboveListPrice / i);
       // console.log("totalAboveListPrice: ", totalAboveListPrice, " / i: ", i, " = avgAboveListPrice: ", avgAboveListPrice);
       avgAboveListPricePercentage = totalAboveListPricePercentage / i;
@@ -189,6 +189,7 @@ function resaStatistics(req, res, next) {
         .json({
           status: 'success',
           avgDOM: avgDOM,
+          avgDOMBeforeStaged: avgDOMBeforeStaged,
           avgDOMstaged: avgDOMstaged,
           avgAboveListPrice: avgAboveListPrice,
           avgAboveListPricePercentage: avgAboveListPricePercentage,
