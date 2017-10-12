@@ -18,15 +18,16 @@ router.get('/', function(req, res, next) {
 
 var db = require('./queries');
 
-router.get('/resa/', db.getAllResaData);
-router.get('/resa/:id', db.getResaData);
-router.get('/stager/', db.getAllStagerData);
-router.get('/stager/:id', db.getStagerData);
+// router.get('/resa/', db.getAllResaData);
+// router.get('/resa/:id', db.getResaData);
+// router.get('/stager/', db.getAllStagerData);
+// router.get('/stager/:id', db.getStagerData);
 router.post('/stager/', db.createStagerData);
 router.put('/stager/:id', db.updateStagerData);
 // router.delete('/stager/:id', db.removeStagerData);
-router.get('/resastatistics', db.resaStatistics);
-router.get('/stagerstatistics', db.stagerStatistics);
-router.get('/stagerstatistics/:id', db.stagerSingleStatistic);
+router.get('/resa', db.resaStatistics);
+router.get('/resa/:id', db.resaSingleStatistic);
+router.get('/stager', db.stagerStatistics);
+router.get('/stager/:id', db.stagerSingleStatistic);
 
 module.exports = router;

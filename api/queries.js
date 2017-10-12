@@ -143,30 +143,32 @@ function updateStagerData(req, res, next) {
 // }
 
 function resaStatistics(req, res, next) {
-  db.any('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata ORDER BY id DESC')
+  db.any('SELECT id, stagersFirstName, stagersLastName, propertyAddress, propertyCity, propertyState, propertyZip, dateListed, dateSold, listPrice, soldPrice, listingPriceRange, serviceProvided FROM stagerdata ORDER BY id DESC')
     .then((data) => {
       var totalDOM = 0;
       var avgDOM = 0;
       var totalDOMstaged = 0;
       var avgDOMstaged = 0;
-      var totalIncreasedValue = 0;
-      var avgIncreasedValue = 0;
-      var totalIncreasedValuePercentage = 0;
-      var avgIncreasedValuePercentage = 0;
+      var avgDOMBeforeStaged = 0;
+      var totalAboveListPrice = 0;
+      var avgAboveListPrice = 0;
+      var totalAboveListPricePercentage = 0;
+      var avgAboveListPricePercentage = 0;
       var i = 0;
       data.forEach((record) => {
         var dateListed = new Date(record.datelisted);
         var serviceDate = new Date(record.servicedate);
         var dateUnderContract = new Date(record.dateundercontract);
 
-        record.increasedValue = Math.floor(record.soldprice - record.listprice);
-        record.increasedValuePercetage = Math.floor((record.soldprice / record.listprice) * 100);
+        record.aboveListPrice = Math.floor(record.soldprice - record.listprice);
+        record.aboveListPricePercetage = Math.floor((record.soldprice / record.listprice) * 100);
 
-        totalIncreasedValue += record.increasedValue;
-        totalIncreasedValuePercentage += record.increasedValuePercetage;
+        totalAboveListPrice += record.aboveListPrice;
+        totalAboveListPricePercentage += record.aboveListPricePercetage;
 
         record.dom = Math.floor((dateUnderContract - dateListed) / 86400000);
         record.domStaged = Math.floor((dateUnderContract - serviceDate) / 86400000);
+        record.domBeforeStaged = record.dom - record.domStaged;
 
         totalDOM += record.dom;
         totalDOMstaged += record.domStaged;
@@ -174,21 +176,22 @@ function resaStatistics(req, res, next) {
         i++;
       })
       avgDOM = Math.floor(totalDOM / i);
-      console.log("totalDOM: ", totalDOM, " / i: ", i, " = avgDOM: ", avgDOM);
+      // console.log("totalDOM: ", totalDOM, " / i: ", i, " = avgDOM: ", avgDOM);
       avgDOMstaged = Math.floor(totalDOMstaged / i);
-      console.log("totalDOMStaged: ", totalDOMstaged, " / i: ", i, " = avgDOMStaged: ", avgDOMstaged);
-      avgIncreasedValue = Math.floor(totalIncreasedValue / i);
-      console.log("totalIncreasedValue: ", totalIncreasedValue, " / i: ", i, " = avgIncreasedValue: ", avgIncreasedValue);
-      avgIncreasedValuePercentage = totalIncreasedValuePercentage / i;
-      console.log("totalIncreasedValuePercentage: ", totalIncreasedValuePercentage, " / i: ", i, " = avgIncreasedValuePercentage: ", avgIncreasedValuePercentage);
+      avgDOMBeforeStaged = avgDOM - avgDOMstaged;
+      // console.log("totalDOMStaged: ", totalDOMstaged, " / i: ", i, " = avgDOMStaged: ", avgDOMstaged);
+      avgAboveListPrice = Math.floor(totalAboveListPrice / i);
+      // console.log("totalAboveListPrice: ", totalAboveListPrice, " / i: ", i, " = avgAboveListPrice: ", avgAboveListPrice);
+      avgAboveListPricePercentage = totalAboveListPricePercentage / i;
+      console.log("totalAboveListPricePercentage: ", totalAboveListPricePercentage, " / i: ", i, " = avgAboveListPricePercentage: ", avgAboveListPricePercentage);
       // clean(data);
       res.status(200)
         .json({
           status: 'success',
           avgDOM: avgDOM,
           avgDOMstaged: avgDOMstaged,
-          avgIncreasedValue: avgIncreasedValue,
-          avgIncreasedValuePercentage: avgIncreasedValuePercentage,
+          avgAboveListPrice: avgAboveListPrice,
+          avgAboveListPricePercentage: avgAboveListPricePercentage,
           data: data,
           message: 'Retrieved all stager data'
         });
@@ -199,30 +202,32 @@ function resaStatistics(req, res, next) {
 }
 
 function stagerStatistics(req, res, next) {
-  db.any('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata ORDER BY id DESC')
+  db.any('SELECT * FROM stagerdata ORDER BY id DESC')
     .then((data) => {
       var totalDOM = 0;
       var avgDOM = 0;
       var totalDOMstaged = 0;
       var avgDOMstaged = 0;
-      var totalIncreasedValue = 0;
-      var avgIncreasedValue = 0;
-      var totalIncreasedValuePercentage = 0;
-      var avgIncreasedValuePercentage = 0;
+      var avgDOMBeforeStaged = 0;
+      var totalAboveListPrice = 0;
+      var avgAboveListPrice = 0;
+      var totalAboveListPricePercentage = 0;
+      var avgAboveListPricePercentage = 0;
       var i = 0;
       data.forEach((record) => {
         var dateListed = new Date(record.datelisted);
         var serviceDate = new Date(record.servicedate);
         var dateUnderContract = new Date(record.dateundercontract);
 
-        record.increasedValue = Math.floor(record.soldprice - record.listprice);
-        record.increasedValuePercetage = Math.floor((record.soldprice / record.listprice) * 100);
+        record.aboveListPrice = Math.floor(record.soldprice - record.listprice);
+        record.aboveListPricePercetage = Math.floor((record.soldprice / record.listprice) * 100);
 
-        totalIncreasedValue += record.increasedValue;
-        totalIncreasedValuePercentage += record.increasedValuePercetage;
+        totalAboveListPrice += record.aboveListPrice;
+        totalAboveListPricePercentage += record.aboveListPricePercetage;
 
         record.dom = Math.floor((dateUnderContract - dateListed) / 86400000);
         record.domStaged = Math.floor((dateUnderContract - serviceDate) / 86400000);
+        record.domBeforeStaged = record.dom - record.domStaged;
 
         totalDOM += record.dom;
         totalDOMstaged += record.domStaged;
@@ -230,21 +235,23 @@ function stagerStatistics(req, res, next) {
         i++;
       })
       avgDOM = Math.floor(totalDOM / i);
-      console.log("totalDOM: ", totalDOM, " / i: ", i, " = avgDOM: ", avgDOM);
+      // console.log("totalDOM: ", totalDOM, " / i: ", i, " = avgDOM: ", avgDOM);
       avgDOMstaged = Math.floor(totalDOMstaged / i);
-      console.log("totalDOMStaged: ", totalDOMstaged, " / i: ", i, " = avgDOMStaged: ", avgDOMstaged);
-      avgIncreasedValue = Math.floor(totalIncreasedValue / i);
-      console.log("totalIncreasedValue: ", totalIncreasedValue, " / i: ", i, " = avgIncreasedValue: ", avgIncreasedValue);
-      avgIncreasedValuePercentage = totalIncreasedValuePercentage / i;
-      console.log("totalIncreasedValuePercentage: ", totalIncreasedValuePercentage, " / i: ", i, " = avgIncreasedValuePercentage: ", avgIncreasedValuePercentage);
+      avgDOMBeforeStaged = avgDOM - avgDOMstaged;
+      // console.log("totalDOMStaged: ", totalDOMstaged, " / i: ", i, " = avgDOMStaged: ", avgDOMstaged);
+      avgAboveListPrice = Math.floor(totalAboveListPrice / i);
+      // console.log("totalAboveListPrice: ", totalAboveListPrice, " / i: ", i, " = avgAboveListPrice: ", avgAboveListPrice);
+      avgAboveListPricePercentage = totalAboveListPricePercentage / i;
+      // console.log("totalAboveListPricePercentage: ", totalAboveListPricePercentage, " / i: ", i, " = avgAboveListPricePercentage: ", avgAboveListPricePercentage);
       // clean(data);
       res.status(200)
         .json({
           status: 'success',
           avgDOM: avgDOM,
+          avgDOMBeforeStaged: avgDOMBeforeStaged,
           avgDOMstaged: avgDOMstaged,
-          avgIncreasedValue: avgIncreasedValue,
-          avgIncreasedValuePercentage: avgIncreasedValuePercentage,
+          avgAboveListPrice: avgAboveListPrice,
+          avgAboveListPricePercentage: avgAboveListPricePercentage,
           data: data,
           message: 'Retrieved all stager data'
         });
@@ -256,24 +263,55 @@ function stagerStatistics(req, res, next) {
 
 function stagerSingleStatistic(req, res, next) {
   var id = parseInt(req.params.id);
-  db.one('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata WHERE id = $1', id)
+  db.one('SELECT * FROM stagerdata WHERE id = $1', id)
     .then((data) => {
 
       var dateListed = new Date(data.datelisted);
       var serviceDate = new Date(data.servicedate);
       var dateUnderContract = new Date(data.dateundercontract);
 
-      data.increasedValue = data.soldprice - data.listprice;
-      data.increasedValuePercetage = Math.floor((data.soldprice / data.listprice) * 100);
+      data.aboveListPrice = data.soldprice - data.listprice;
+      data.aboveListPricePercetage = Math.floor((data.soldprice / data.listprice) * 100);
 
       data.dom = Math.floor((dateUnderContract - dateListed) / 86400000);
       data.domStaged = Math.floor((dateUnderContract - serviceDate) / 86400000);
+      data.domBeforeStaged = data.dom - data.domStaged;
+
 
       res.status(200)
         .json({
           status: 'success',
           data: data,
-          message: 'Retrieved all stager data'
+          message: 'Retrieved single stager data'
+        });
+    })
+    .catch((err) => {
+      return next(err);
+    });
+}
+
+function resaSingleStatistic(req, res, next) {
+  var id = parseInt(req.params.id);
+  db.one('SELECT id, stagersFirstName, stagersLastName, propertyAddress, propertyCity, propertyState, propertyZip, dateListed, dateSold, listPrice, soldPrice, listingPriceRange, serviceProvided FROM stagerdata WHERE id = $1', id)
+    .then((data) => {
+
+      var dateListed = new Date(data.datelisted);
+      var serviceDate = new Date(data.servicedate);
+      var dateUnderContract = new Date(data.dateundercontract);
+
+      data.aboveListPrice = data.soldprice - data.listprice;
+      data.aboveListPricePercetage = Math.floor((data.soldprice / data.listprice) * 100);
+
+      data.dom = Math.floor((dateUnderContract - dateListed) / 86400000);
+      data.domStaged = Math.floor((dateUnderContract - serviceDate) / 86400000);
+      data.domBeforeStaged = data.dom - data.domStaged;
+
+
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved single stager data'
         });
     })
     .catch((err) => {
@@ -304,14 +342,15 @@ function clean(obj) {
 /////////////
 
 module.exports = {
-  getAllResaData: getAllResaData,
-  getResaData: getResaData,
-  getAllStagerData: getAllStagerData,
-  getStagerData: getStagerData,
+  // getAllResaData: getAllResaData,
+  // getResaData: getResaData,
+  // getAllStagerData: getAllStagerData,
+  // getStagerData: getStagerData,
   createStagerData: createStagerData,
   updateStagerData: updateStagerData,
   // removeStagerData: removeStagerData,
   resaStatistics: resaStatistics,
   stagerStatistics: stagerStatistics,
-  stagerSingleStatistic: stagerSingleStatistic
+  stagerSingleStatistic: stagerSingleStatistic,
+  resaSingleStatistic: resaSingleStatistic
 };
