@@ -97,11 +97,12 @@ function createStagerData(req, res, next) {
       'values(${stagersFirstName}, ${stagersLastName}, ${listingRealtor}, ${propertyAddress}, ${propertyCity}, ${propertyState}, ${propertyZip}, ${dateListed}, ${dateFirstOffer}, ${dateUnderContract}, ${dateSold}, ${listPrice}, ${soldPrice}, ${serviceDate}, ${listingPriceRange}, ${serviceProvided}, ${homeOwnersName}, ${createdBy})',
       req.body)
     .then(() => {
-      res.status(200)
-        .json({
-          status: 'success',
-          message: 'Inserted one entry'
-        });
+      res.status(204);
+      // res.status(200)
+      //   .json({
+      //     status: 'success',
+      //     message: 'Inserted one entry'
+      //   });
     })
     .catch((err) => {
       return next(err);
