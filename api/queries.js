@@ -142,27 +142,8 @@ function updateStagerData(req, res, next) {
 //     });
 // }
 
-function date(req, res, next) {
-  db.any('SELECT dateListed, dateFirstOffer, dateUnderContract, serviceDate FROM stagerdata WHERE id = 6')
-    .then((data) => {
-      return data = data[0];
-    })
-    .then((data) => {
-      // clean(data);
-      res.status(200)
-        .json({
-          status: 'success',
-          data: data,
-          message: 'Retrieved date data'
-        });
-    })
-    .catch((err) => {
-      return next(err);
-    });
-}
-
 function resaStatistics(req, res, next) {
-  db.any('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata')
+  db.any('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata ORDER BY id DESC')
     .then((data) => {
       var totalDOM = 0;
       var avgDOM = 0;
@@ -218,7 +199,7 @@ function resaStatistics(req, res, next) {
 }
 
 function stagerStatistics(req, res, next) {
-  db.any('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata')
+  db.any('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata ORDER BY id DESC')
     .then((data) => {
       var totalDOM = 0;
       var avgDOM = 0;
