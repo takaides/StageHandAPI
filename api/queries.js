@@ -143,17 +143,17 @@ function updateStagerData(req, res, next) {
 function date(req, res, next) {
   db.any('SELECT dateListed, dateFirstOffer, dateUnderContract, serviceDate FROM stagerdata WHERE id = 6')
     .then((data) => {
-        return data = data[0];
-      })
-      .then((data) => {
-        // clean(data);
-        res.status(200)
-          .json({
-            status: 'success',
-            data: data,
-            message: 'Retrieved date data'
-          });
-      })
+      return data = data[0];
+    })
+    .then((data) => {
+      // clean(data);
+      res.status(200)
+        .json({
+          status: 'success',
+          data: data,
+          message: 'Retrieved date data'
+        });
+    })
     .catch((err) => {
       return next(err);
     });
@@ -162,11 +162,39 @@ function date(req, res, next) {
 function resaStatistics(req, res, next) {
   db.any('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata')
     .then((data) => {
+      var totalDOM, avgDOM, totalDOMstaged, avgDOMstaged, totalIncreasedValue, avgIncreasedValue, totalIncreasedValuePercentage, avgIncreasedValuePercentage;
+      data.forEach((record) => {
+        var dateListed = new Date(record.datelisted);
+        var serviceDate = new Date(record.servicedate);
+        var dateUnderContract = new Date(record.dateundercontract);
+
+        record.increasedValue = record.soldprice - record.listprice;
+        record.increasedValuePercetage = (record.soldprice / record.listprice) * 100;
+
+        totalIncreasedValue += record.increasedValue;
+        totalIncreasedValuePercentage += record.increasedValuePercentage;
+
+        record.dom = (dateUnderContract - dateListed) / 86400000;
+        record.domStaged = (dateUnderContract - serviceDate) / 86400000;
+
+        totalDOM += record.dom;
+        totalDOMstaged += record.domStaged;
+
+        i++;
+      })
+      avgDOM = totalDOM / i;
+      avgDOMstaged = totalDOMstaged / i;
+      avgIncreasedValue = totalIncreasedValue / i;
+      avgIncreasedValuePercentage = totalIncreasedValuePercentage / i;
       // clean(data);
       res.status(200)
         .json({
           status: 'success',
           data: data,
+          avgDOM: avgDOM,
+          avgDOMstaged: avgDOMstaged,
+          avgIncreasedValue: avgIncreasedValue,
+          avgIncreasedValuePercentage:avgIncreasedValuePercentage,
           message: 'Retrieved all stager data'
         });
     })
