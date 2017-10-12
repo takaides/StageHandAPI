@@ -163,6 +163,7 @@ function resaStatistics(req, res, next) {
   db.any('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata')
     .then((data) => {
       var totalDOM, avgDOM, totalDOMstaged, avgDOMstaged, totalIncreasedValue, avgIncreasedValue, totalIncreasedValuePercentage, avgIncreasedValuePercentage;
+      var i = 0;
       data.forEach((record) => {
         var dateListed = new Date(record.datelisted);
         var serviceDate = new Date(record.servicedate);
@@ -194,7 +195,7 @@ function resaStatistics(req, res, next) {
           avgDOM: avgDOM,
           avgDOMstaged: avgDOMstaged,
           avgIncreasedValue: avgIncreasedValue,
-          avgIncreasedValuePercentage:avgIncreasedValuePercentage,
+          avgIncreasedValuePercentage: avgIncreasedValuePercentage,
           message: 'Retrieved all stager data'
         });
     })
