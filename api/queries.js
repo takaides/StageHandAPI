@@ -6,7 +6,9 @@ var options = {
 };
 
 var pgp = require('pg-promise')(options);
-pgp.pg.defaults.ssl = true;
+if (process.env.DATABASE_URL) {
+  pgp.pg.defaults.ssl = true;
+}
 var connectionString = process.env.DATABASE_URL || 'postgres://127.0.0.1:5432/stagehand';
 var db = pgp(connectionString);
 
@@ -97,12 +99,12 @@ function createStagerData(req, res, next) {
       'values(${stagersFirstName}, ${stagersLastName}, ${listingRealtor}, ${propertyAddress}, ${propertyCity}, ${propertyState}, ${propertyZip}, ${dateListed}, ${dateFirstOffer}, ${dateUnderContract}, ${dateSold}, ${listPrice}, ${soldPrice}, ${serviceDate}, ${listingPriceRange}, ${serviceProvided}, ${homeOwnersName}, ${createdBy})',
       req.body)
     .then(() => {
-        res.status(200)
-          .json({
-            status: 'success',
-            message: 'Inserted one entry'
-          });
-        })
+      res.status(200)
+        .json({
+          status: 'success',
+          message: 'Inserted one entry'
+        });
+    })
     .catch((err) => {
       return next(err);
     });
@@ -276,15 +278,15 @@ function stagerSingleStatistic(req, res, next) {
   db.one('SELECT id, dateListed, dateFirstOffer, dateUnderContract, dateSold, listPrice, soldPrice, serviceDate FROM stagerdata WHERE id = $1', id)
     .then((data) => {
 
-        var dateListed = new Date(data.datelisted);
-        var serviceDate = new Date(data.servicedate);
-        var dateUnderContract = new Date(data.dateundercontract);
+      var dateListed = new Date(data.datelisted);
+      var serviceDate = new Date(data.servicedate);
+      var dateUnderContract = new Date(data.dateundercontract);
 
-        data.increasedValue = Math.floor(data.soldprice - data.listprice);
-        data.increasedValuePercetage = Math.floor((data.soldprice / data.listprice) * 100);
+      data.increasedValue = Math.floor(data.soldprice - data.listprice);
+      data.increasedValuePercetage = Math.floor((data.soldprice / data.listprice) * 100);
 
-        data.dom = Math.floor((dateUnderContract - dateListed) / 86400000);
-        data.domStaged = Math.floor((dateUnderContract - serviceDate) / 86400000);
+      data.dom = Math.floor((dateUnderContract - dateListed) / 86400000);
+      data.domStaged = Math.floor((dateUnderContract - serviceDate) / 86400000);
 
       res.status(200)
         .json({
