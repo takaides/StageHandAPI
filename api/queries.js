@@ -282,7 +282,7 @@ function stagerSingleStatistic(req, res, next) {
       var serviceDate = new Date(data.servicedate);
       var dateUnderContract = new Date(data.dateundercontract);
 
-      data.increasedValue = Math.floor(data.soldprice - data.listprice);
+      data.increasedValue = data.soldprice - data.listprice;
       data.increasedValuePercetage = Math.floor((data.soldprice / data.listprice) * 100);
 
       data.dom = Math.floor((dateUnderContract - dateListed) / 86400000);
@@ -291,10 +291,6 @@ function stagerSingleStatistic(req, res, next) {
       res.status(200)
         .json({
           status: 'success',
-          avgDOM: avgDOM,
-          avgDOMstaged: avgDOMstaged,
-          avgIncreasedValue: avgIncreasedValue,
-          avgIncreasedValuePercentage: avgIncreasedValuePercentage,
           data: data,
           message: 'Retrieved all stager data'
         });
