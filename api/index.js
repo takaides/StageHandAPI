@@ -27,7 +27,6 @@ router.put('/stager/:id', db.updateStagerData);
 // router.delete('/stager/:id', db.removeStagerData);
 router.get('/resastatistics', db.resaStatistics);
 router.get('/stagerstatistics', db.stagerStatistics);
-router.get('/date',db.date);
-
+router.get('/stagerstatistics/:id', db.stagerSingleStatistic);
 
 module.exports = router;
